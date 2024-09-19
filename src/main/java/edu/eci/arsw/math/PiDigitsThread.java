@@ -11,12 +11,21 @@ public class PiDigitsThread extends Thread {
 
     private byte[] ans;
 
+    boolean isPaused = false;
+
     public PiDigitsThread(int start, int count){
         this.start = start;
         this.count = count;
     }
     public void run(){
-        ans = this.getDigits(this.start, this.count);
+        if (isPaused){
+            try {
+                this.wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        ans = getDigits(this.start, this.count);
     }
 
     /**
@@ -119,5 +128,13 @@ public class PiDigitsThread extends Thread {
 
     public byte[] getAns(){
         return ans;
+    }
+
+    public void paused(){
+        this.isPaused = true;
+    }
+
+    public void runAgain(){
+        this.isPaused = false;
     }
 }

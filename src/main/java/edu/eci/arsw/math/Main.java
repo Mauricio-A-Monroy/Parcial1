@@ -19,16 +19,22 @@ public class Main {
         //System.out.println(bytesToHex(PiDigits.getDigits(1, 1000000)));
 
         /*
-        PiDigitsThread piDigitsThread1 = new PiDigitsThread(1, 100);
-        piDigitsThread1.start();
+        PiDigitsThread piDigitsThread3 = new PiDigitsThread(1, 100);
+        piDigitsThread3.start();
         PiDigitsThread piDigitsThread2 = new PiDigitsThread(10, 100);
         piDigitsThread2.start();*/
 
         //PiDigits.getDigits(1, 100, 3);
 
-        System.out.println(PiDigits.getDigits(1, 1000, 10));
+        byte[] ans1 = PiDigits.getDigits(1, 100, 20);
 
-        PiDigitsThread piDigitsThread1 = new PiDigitsThread(1, 1000);
+        String str1 = "";
+        for (byte i: ans1){
+            str1 += i;
+        }
+        System.out.println(str1);
+
+        PiDigitsThread piDigitsThread1 = new PiDigitsThread(1, 100);
         piDigitsThread1.start();
         try {
             piDigitsThread1.join();
@@ -36,7 +42,13 @@ public class Main {
             throw new RuntimeException(e);
         }
 
-        System.out.println(piDigitsThread1.getAns());
+        byte[] ans2 = piDigitsThread1.getAns();
+
+        String str2 = "";
+        for (byte i: ans2){
+            str2 += i;
+        }
+        System.out.println(str2);
 
         //System.out.println(bytesToHex(piDigitsThread);
     }
