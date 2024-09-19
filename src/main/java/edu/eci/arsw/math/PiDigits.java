@@ -1,5 +1,9 @@
 package edu.eci.arsw.math;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 ///  <summary>
 ///  An implementation of the Bailey-Borwein-Plouffe formula for calculating hexadecimal
 ///  digits of pi.
@@ -18,33 +22,52 @@ public class PiDigits {
      * @param count The number of digits to return
      * @return An array containing the hexadecimal digits.
      */
-    public static byte[] getDigits(int start, int count) {
-        if (start < 0) {
-            throw new RuntimeException("Invalid Interval");
+    public static byte[] getDigits(int start, int count, int n) {
+        ArrayList<PiDigitsThread> threads = new ArrayList<>();
+        if (count % n == 0){
+            int newCont = count/n;
+            int newStart = start;
+            for(int i = 0; i < n; i++){
+                PiDigitsThread piDigitsThread = new PiDigitsThread(newStart, newCont);
+                threads.add(piDigitsThread);
+                piDigitsThread.start();
+                newStart += newCont;
+            }
+        } else {
+            int newCont = count/n;
+            int newStart = start;
+            for(int i = 0; i < n - 1; i++){
+                PiDigitsThread piDigitsThread = new PiDigitsThread(newStart, newCont);
+                threads.add(piDigitsThread);
+                piDigitsThread.start();
+                newStart += newCont;
+            }
+            PiDigitsThread piDigitsThread = new PiDigitsThread(newStart, newCont + (count%n));
+            threads.add(piDigitsThread);
+            piDigitsThread.start();
         }
 
-        if (count < 0) {
-            throw new RuntimeException("Invalid Interval");
+        for (PiDigitsThread pDT: threads){
+            try {
+                pDT.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
+
 
         byte[] digits = new byte[count];
-        double sum = 0;
+        int index = 0;
 
-        for (int i = 0; i < count; i++) {
-            if (i % DigitsPerSum == 0) {
-                sum = 4 * sum(1, start)
-                        - 2 * sum(4, start)
-                        - sum(5, start)
-                        - sum(6, start);
-
-                start += DigitsPerSum;
+        for (PiDigitsThread pDT: threads){
+            for(byte i: pDT.getAns()){
+                digits[index] = i;
+                index += 1;
             }
-
-            sum = 16 * (sum - Math.floor(sum));
-            digits[i] = (byte) sum;
         }
 
         return digits;
+
     }
 
     /// <summary>

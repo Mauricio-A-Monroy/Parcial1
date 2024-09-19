@@ -18,10 +18,26 @@ public class Main {
         //System.out.println(bytesToHex(PiDigits.getDigits(1, 100)));
         //System.out.println(bytesToHex(PiDigits.getDigits(1, 1000000)));
 
+        /*
         PiDigitsThread piDigitsThread1 = new PiDigitsThread(1, 100);
         piDigitsThread1.start();
         PiDigitsThread piDigitsThread2 = new PiDigitsThread(10, 100);
-        piDigitsThread2.start();
+        piDigitsThread2.start();*/
+
+        //PiDigits.getDigits(1, 100, 3);
+
+        System.out.println(PiDigits.getDigits(1, 1000, 10));
+
+        PiDigitsThread piDigitsThread1 = new PiDigitsThread(1, 1000);
+        piDigitsThread1.start();
+        try {
+            piDigitsThread1.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println(piDigitsThread1.getAns());
+
         //System.out.println(bytesToHex(piDigitsThread);
     }
 

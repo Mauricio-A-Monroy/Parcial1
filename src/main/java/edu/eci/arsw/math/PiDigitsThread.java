@@ -9,12 +9,14 @@ public class PiDigitsThread extends Thread {
 
     private int count;
 
+    private byte[] ans;
+
     public PiDigitsThread(int start, int count){
         this.start = start;
         this.count = count;
     }
     public void run(){
-        this.getDigits(this.start, this.count);
+        ans = this.getDigits(this.start, this.count);
     }
 
     /**
@@ -24,6 +26,7 @@ public class PiDigitsThread extends Thread {
      * @return An array containing the hexadecimal digits.
      */
     public static byte[] getDigits(int start, int count) {
+        //System.out.println("tread with start: " + start + " and count: " + count);
         if (start < 0) {
             throw new RuntimeException("Invalid Interval");
         }
@@ -48,7 +51,6 @@ public class PiDigitsThread extends Thread {
             sum = 16 * (sum - Math.floor(sum));
             digits[i] = (byte) sum;
         }
-        System.out.println("tread with start: " + start + " digits: "+ digits);
         return digits;
     }
 
@@ -113,5 +115,9 @@ public class PiDigitsThread extends Thread {
         }
 
         return result;
+    }
+
+    public byte[] getAns(){
+        return ans;
     }
 }
